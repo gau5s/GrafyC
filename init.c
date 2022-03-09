@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 #include "init.h"
@@ -8,7 +9,42 @@ double losuj(int a, int b) {
 	double wylosowana = (double)rand() / RAND_MAX * (b-a) + a;
 	return wylosowana;
 }
+graph_t* graph_read(char *file)
+{
+	int a,rows,columns;
+        FILE *in = fopen (file,"r");
+        if(in==NULL)
+        {       printf("Nie udalo sie odczytac pliku");
+                return NULL;
+        }
+        if(fscanf(in,"%d %d\n",&rows,&columns)!=2)
+        {       printf("Zly format pliku");
+                return NULL;
+        }
 
+        graph_t* gr = malloc(sizeof(graph_t) *rows*columns);
+        char *str=malloc(sizeof(str)*1000);
+
+        int offset;
+        for(int i=0;i<rows*columns;i++)
+        {        
+		gr[i].edg = malloc(sizeof(graph_t*) * 4);
+                gr[i].val_edg = malloc(sizeof(double) * 4);
+                fgets(str,1000,in);
+                gr[i].node = i;
+                for(int j=0;j<4;j++)
+                {
+                        gr[i].edg[j] = NULL;
+                        if(sscanf(str," %d :%lf%n",&a,&gr[i].val_edg[j],&offset)==2)
+                        {       str+= offset;
+                                gr[i].edg[j]=&gr[a];
+                                gr[i].nmb_edg++;
+                        }
+		}
+	}
+	fclose(in);
+	return gr;
+}
 
 graph_t* graph_init(int height, int width, double a, double b) { // a i b to przedzial losowania <a,b>
 	graph_t* graf = malloc(sizeof(graph_t) *height*width);

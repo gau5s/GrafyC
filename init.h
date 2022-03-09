@@ -9,6 +9,7 @@ typedef struct graph {
 } graph_t;
 
 double losuj(int a, int b);
+graph_t* graph_read(char *file);
 
 graph_t* graph_init(int height, int width, double a, double b);
 
