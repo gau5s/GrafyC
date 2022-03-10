@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 #include "init.h"
@@ -78,6 +79,17 @@ graph_t* graph_init(int height, int width, double a, double b) { // a i b to prz
 	
 	
 	return graf;
+}
+
+void graph_fwrite(FILE* out ,graph_t* graf, int height, int width) {
+	for(int i = 0; i < height*width; i++) {
+		for(int j = 0; j < 4; j++) {
+			if(graf[i].edg[j] != NULL)
+				fprintf(out, "%i: %f ", graf[i].edg[j]->node, graf[i].val_edg[j]);
+		}
+		fprintf(out, "\n");
+	}
+
 }
 
 void graph_free(graph_t** graf, int height, int width) {

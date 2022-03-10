@@ -13,7 +13,10 @@ int main() { //usunac ten main bo to tylko aby pokazac ze dziala init.h
 		}
 		printf("\n");
 	}
+
+
 	graph_free(&gr, 4, 5);
+
 
 	return 0;
 }

@@ -12,6 +12,8 @@ double losuj(int a, int b);
 
 graph_t* graph_init(int height, int width, double a, double b);
 
+void graph_fwrite(FILE* out, graph_t* graf, int height, int width);
+
 void graph_free(graph_t** graf, int height, int width);
 
 #endif
