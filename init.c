@@ -11,14 +11,14 @@ double losuj(int a, int b) {
 }
 graph_t* graph_read(char *file)
 {
-	int a,rows,columns;
+	int a,rows,columns;//ilosc wierszy to wysokosc grafu a kolumn jego szerokosc
         FILE *in = fopen (file,"r");
         if(in==NULL)
         {       printf("Nie udalo sie odczytac pliku");
                 return NULL;
         }
         if(fscanf(in,"%d %d\n",&rows,&columns)!=2)
-        {       printf("Zly format pliku");
+	{       printf("Zly format pliku:");
                 return NULL;
         }
 
@@ -27,19 +27,31 @@ graph_t* graph_read(char *file)
 
         int offset;
         for(int i=0;i<rows*columns;i++)
-        {        
+        {       gr[i].node = i; 
 		gr[i].edg = malloc(sizeof(graph_t*) * 4);
                 gr[i].val_edg = malloc(sizeof(double) * 4);
-                fgets(str,1000,in);
-                gr[i].node = i;
-                for(int j=0;j<4;j++)
-                {
-                        gr[i].edg[j] = NULL;
-                        if(sscanf(str," %d :%lf%n",&a,&gr[i].val_edg[j],&offset)==2)
-                        {       str+= offset;
-                                gr[i].edg[j]=&gr[a];
-                                gr[i].nmb_edg++;
-                        }
+                if(fgets(str,1000,in)==NULL)
+		{	printf("Nie udalo sie odczytac linii:%d\n",i+2);
+	        	return NULL;
+		}	
+		else
+		{	if (str[0] == '\n')
+			{	printf("Linia %d jest pusta",i+2);
+				return NULL;
+			}
+                	for(int j=0;j<4;j++)
+                	{
+	                        gr[i].edg[j] = NULL;
+        	                if(sscanf(str," %d :%lf%n",&a,&gr[i].val_edg[j],&offset)==2)
+                	        {	if(a!=i+columns||a!=i-columns||a!=i+1||a!=-1)
+					{	printf("Wezel podany jako %d w linii %d nie moze zostac polaczony z sasiednimi wezlami\n",j+1,i+2);
+						return NULL;
+					}
+					str+= offset;//offset przesuwa wskaznik na str zeby nie czytac w petli linii ciagle od nowa
+                        	        gr[i].edg[j]=&gr[a];//wskaznik na wezel o indeksie a 
+	                                gr[i].nmb_edg++;
+	                        }
+			}
 		}
 	}
 	fclose(in);

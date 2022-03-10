@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 {	//main testujący funkcje graf_read
 
 //generowanie grafu
-	FILE *out = fopen (argv[1],"w");
+/*	FILE *out = fopen (argv[1],"w");
 	graph_t* graf = graph_init(10,10,5,10);
 	fprintf(out,"10 10\n");
 	for(int i = 0; i < 100; i++) {
@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 	}
 	fclose(out);
 
-
+*/
 	
 
 	graph_t* gr=graph_read(argv[1]);
