@@ -9,6 +9,7 @@ double losuj(int a, int b) {
 	double wylosowana = (double)rand() / RAND_MAX * (b-a) + a;
 	return wylosowana;
 }
+
 graph_t* graph_read(char *file)
 {
 	int a,rows,columns;//ilosc wierszy to wysokosc grafu a kolumn jego szerokosc
@@ -17,43 +18,62 @@ graph_t* graph_read(char *file)
         {       printf("Nie udalo sie odczytac pliku");
                 return NULL;
         }
-        if(fscanf(in,"%d %d\n",&rows,&columns)!=2)
+        if(fscanf(in,"%i %i\n",&rows,&columns)!=2 || rows <= 0 || columns <= 0)
 	{       printf("Zly format pliku:");
                 return NULL;
         }
 
         graph_t* gr = malloc(sizeof(graph_t) *rows*columns);
-        char *str=malloc(sizeof(str)*1000);
+        char* str = malloc(sizeof(char) * 1000);
+	int offset = 0;
+	int i = 0;//aktualny wezel
+	int j = 0;
+	int curr_col = 1, curr_row = 1;
+	while(fgets(str, 1000, in) != NULL) {
+		if(curr_col > columns) {
+			curr_col = 1;
+			curr_row++;
+		}
 
-        int offset;
-        for(int i=0;i<rows*columns;i++)
-        {       gr[i].node = i; 
+		gr[i].node = i;
 		gr[i].edg = malloc(sizeof(graph_t*) * 4);
                 gr[i].val_edg = malloc(sizeof(double) * 4);
-                if(fgets(str,1000,in)==NULL)
-		{	printf("Nie udalo sie odczytac linii:%d\n",i+2);
-	        	return NULL;
-		}	
-		else
-		{	if (str[0] == '\n')
-			{	printf("Linia %d jest pusta",i+2);
-				return NULL;
+		char* tmpstr = str;
+		int v;
+		while( sscanf( str, "%d :%lf%n", &a, &(gr[i].val_edg[j]), &offset ) == 2) {//, &offset ) == 3) {
+			if(a >= 0 && a < columns*rows) { //czy a jest wogole w przedziale
+				if(a-columns == i || a+columns == i || //spr czy mozliwe polaczenia
+				  (a+1 == i && curr_col-1 < columns) || 
+				  (a-1 == i && curr_col+1 > 1)) {
+
+					gr[i].edg[j++] = &gr[a];
+					gr[i].nmb_edg++;
+					str += offset;
+				}
+				else {
+					gr[i].edg[j++] = NULL;
+					str += offset;
+				}
+
 			}
-                	for(int j=0;j<4;j++)
-                	{
-	                        gr[i].edg[j] = NULL;
-        	                if(sscanf(str," %d :%lf%n",&a,&gr[i].val_edg[j],&offset)==2)
-                	        {	if(a!=i+columns||a!=i-columns||a!=i+1||a!=-1)
-					{	printf("Wezel podany jako %d w linii %d nie moze zostac polaczony z sasiednimi wezlami\n",j+1,i+2);
-						return NULL;
-					}
-					str+= offset;//offset przesuwa wskaznik na str zeby nie czytac w petli linii ciagle od nowa
-                        	        gr[i].edg[j]=&gr[a];//wskaznik na wezel o indeksie a 
-	                                gr[i].nmb_edg++;
-	                        }
+
+			else {
+				gr[i].edg[j++] = NULL;
+				str += offset;
 			}
+			if(j > 3)
+				break;
+
 		}
+		j = 0;
+		str = tmpstr;
+
+		curr_col++;
+		i++;
+		if(i >= columns*rows)  break;
+
 	}
+	free(str);
 	fclose(in);
 	return gr;
 }
