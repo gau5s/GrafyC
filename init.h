@@ -15,4 +15,6 @@ graph_t* graph_init(int height, int width, double a, double b);
 
 void graph_free(graph_t** graf, int height, int width);
 
+void graph_print(graph_t* graf, int height, int width);
+
 #endif

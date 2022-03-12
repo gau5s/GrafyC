@@ -10,6 +10,24 @@ double losuj(int a, int b) {
 	return wylosowana;
 }
 
+int czy_bylo(graph_t* gr, int i, int j, int nr_wezla) {
+	for(int k = 0; k < j; k++) {
+		if(gr[i].edg[k]->node == nr_wezla)
+			return 1;
+	}
+	return 0;
+}
+
+void gr_intro(graph_t* gr, int rows, int columns) {
+	for(int i = 0; i < rows*columns; i++) {
+		gr[i].node = i;
+		gr[i].edg = malloc(sizeof(graph_t*) * 4);
+		gr[i].val_edg = malloc(sizeof(double) * 4);
+		gr[i].nmb_edg = 0;
+	}
+
+}
+
 graph_t* graph_read(char *file)
 {
 	int a,rows,columns;//ilosc wierszy to wysokosc grafu a kolumn jego szerokosc
@@ -25,6 +43,10 @@ graph_t* graph_read(char *file)
 
         graph_t* gr = malloc(sizeof(graph_t) *rows*columns);
         char* str = malloc(sizeof(char) * 1000);
+	char* tmpstr = str;
+
+	gr_intro(gr,rows,columns);
+
 	int offset = 0;
 	int i = 0;//aktualny wezel
 	int j = 0;
@@ -35,36 +57,30 @@ graph_t* graph_read(char *file)
 			curr_row++;
 		}
 
-		gr[i].node = i;
-		gr[i].edg = malloc(sizeof(graph_t*) * 4);
-                gr[i].val_edg = malloc(sizeof(double) * 4);
-		char* tmpstr = str;
-		int v;
-		while( sscanf( str, "%d :%lf%n", &a, &(gr[i].val_edg[j]), &offset ) == 2) {//, &offset ) == 3) {
-			if(a >= 0 && a < columns*rows) { //czy a jest wogole w przedziale
+
+		while( sscanf( str, "%i :%lf%n", &a, &(gr[i].val_edg[j]), &offset ) == 2) {
+			if(a >= 0 && a < columns*rows && czy_bylo(gr, i, j, a) == 0 ) { //czy a jest wogole w przedziale i czy sie nie powtarza
 				if(a-columns == i || a+columns == i || //spr czy mozliwe polaczenia
 				  (a+1 == i && curr_col-1 < columns) || 
 				  (a-1 == i && curr_col+1 > 1)) {
-
+					
 					gr[i].edg[j++] = &gr[a];
 					gr[i].nmb_edg++;
 					str += offset;
 				}
-				else {
-					gr[i].edg[j++] = NULL;
-					str += offset;
-				}
+				else	str += offset;
+				
 
 			}
+			else	str += offset;
 
-			else {
-				gr[i].edg[j++] = NULL;
-				str += offset;
-			}
-			if(j > 3)
+			if(j > 3)	
 				break;
-
+			
 		}
+		for(int b = j; b < 4; b++) // zapelnienie pozostalych, 
+			gr[i].edg[b] = NULL; // nieuzywanych polaczen wart NULL
+
 		j = 0;
 		str = tmpstr;
 
@@ -156,4 +172,15 @@ void graph_free(graph_t** graf, int height, int width) {
 	free(*graf);
 	*graf = NULL;
 } 
+
+void graph_print(graph_t* graf, int height, int width) {
+	for(int i = 0; i < height*width; i++) {
+		for(int j = 0; j < graf[i].nmb_edg; j++) {
+                        if( graf[i].edg[j] != NULL )
+                                printf("%i: %lf ", graf[i].edg[j]->node, graf[i].val_edg[j]);
+                }
+                printf("\n");
+        }
+
+}
 
