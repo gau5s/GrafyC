@@ -33,11 +33,11 @@ graph_t* graph_read(char *file)
 	int a,rows,columns;//ilosc wierszy to wysokosc grafu a kolumn jego szerokosc
         FILE *in = fopen (file,"r");
         if(in==NULL)
-        {       printf("Nie udalo sie odczytac pliku");
+        {       printf("Nie udalo sie odczytac pliku\n");
                 return NULL;
         }
         if(fscanf(in,"%i %i\n",&rows,&columns)!=2 || rows <= 0 || columns <= 0)
-	{       printf("Zly format pliku:");
+	{       printf("Zly format pliku\n");
                 return NULL;
         }
 
@@ -51,15 +51,17 @@ graph_t* graph_read(char *file)
 	int i = 0;//aktualny wezel
 	int j = 0;
 	int curr_col = 1, curr_row = 1;
+	int x;
+
 	while(fgets(str, 1000, in) != NULL) {
 		if(curr_col > columns) {
 			curr_col = 1;
 			curr_row++;
 		}
 
-
-		while( sscanf( str, "%i :%lf%n", &a, &(gr[i].val_edg[j]), &offset ) == 2) {
-			if(a >= 0 && a < columns*rows && czy_bylo(gr, i, j, a) == 0 ) { //czy a jest wogole w przedziale i czy sie nie powtarza
+		while( (x = sscanf( str, "%i :%lf%n", &a, &(gr[i].val_edg[j]), &offset )) == 2) {
+			if(a >= 0 && a < columns*rows //czy a jest wogole w przedziale, czy sie nie powtarza i edg > 0
+					&& czy_bylo(gr, i, j, a) == 0 && gr[i].val_edg[j] > 0) {
 				if(a-columns == i || a+columns == i || //spr czy mozliwe polaczenia
 				  (a+1 == i && curr_col-1 < columns) || 
 				  (a-1 == i && curr_col+1 > 1)) {
@@ -68,17 +70,32 @@ graph_t* graph_read(char *file)
 					gr[i].nmb_edg++;
 					str += offset;
 				}
-				else	str += offset;
-				
+				else {
+					str += offset;
+					printf("Podano nieprawidlowe polaczenie do wezla %i", i);
+					graph_free(&gr, rows, columns);
+					return NULL;
+				}
 
 			}
-			else	str += offset;
+			else {
+				str += offset;
+				printf("Bledny format linii %i we wczytanym pliku\n", i+2);
+				graph_free(&gr, rows, columns);
+				return NULL;
+			}
 
 			if(j > 3)	
 				break;
-			
 		}
-		for(int b = j; b < 4; b++) // zapelnienie pozostalych, 
+
+		if(x == 1) {
+			printf("Bledny format linii %i we wczytanym pliku\n", i+2);
+			graph_free(&gr, rows, columns);
+			return NULL;
+		}
+
+		for(int b = j; b < 4; b++)  // zapelnienie pozostalych, 
 			gr[i].edg[b] = NULL; // nieuzywanych polaczen wart NULL
 
 		j = 0;
