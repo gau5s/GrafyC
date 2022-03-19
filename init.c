@@ -43,7 +43,7 @@ graph_t* graph_read(char *file)
                 	{
 	                        gr[i].edg[j] = NULL;
         	                if(sscanf(str," %d :%lf%n",&a,&gr[i].val_edg[j],&offset)==2)
-                	        {	if(a!=i+columns||a!=i-columns||a!=i+1||a!=-1)
+                	        {	if(!(a==i+columns||a==i-columns||a==i+1||a==i-1))
 					{	printf("Wezel podany jako %d w linii %d nie moze zostac polaczony z sasiednimi wezlami\n",j+1,i+2);
 						return NULL;
 					}
