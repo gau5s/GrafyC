@@ -198,6 +198,7 @@ void graph_print(graph_t* graf, int height, int width) {
                 }
                 printf("\n");
         }
+}
 
 void graph_fwrite(FILE* out ,graph_t* graf, int height, int width) {
 	for(int i = 0; i < height*width; i++) {
@@ -208,6 +209,5 @@ void graph_fwrite(FILE* out ,graph_t* graf, int height, int width) {
 		fprintf(out, "\n");
 	}
 
-}
 }
 
