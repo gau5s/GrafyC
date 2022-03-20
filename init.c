@@ -199,5 +199,15 @@ void graph_print(graph_t* graf, int height, int width) {
                 printf("\n");
         }
 
+void graph_fwrite(FILE* out ,graph_t* graf, int height, int width) {
+	for(int i = 0; i < height*width; i++) {
+		for(int j = 0; j < 4; j++) {
+			if(graf[i].edg[j] != NULL)
+				fprintf(out, "%i: %f ", graf[i].edg[j]->node, graf[i].val_edg[j]);
+		}
+		fprintf(out, "\n");
+	}
+
+}
 }
 
