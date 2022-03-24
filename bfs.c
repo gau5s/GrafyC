@@ -26,6 +26,9 @@ int bfs(graph_t* gr,int height,int width)
 		return 1;
 	}
 	else
+	{
+		printf("\nGraf spojny\n");
 		return -1;
-	
+	}
+	free(visited);
 }
