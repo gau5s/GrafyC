@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "pq.h"
 #include "bfs.h"
 #include "init.h"
 
