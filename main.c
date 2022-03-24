@@ -2,17 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "init.h"
+#include "pq.h"
+#include "bfs.h"
 
 int main(int argc, char **argv)
 {
-
-	graph_t* gr=graph_read(argv[1]);
+	int height=atoi(argv[1]);
+	int width=atoi(argv[2]);
+	graph_t* gr=graph_init(height,width,0,1);
 	if(gr==NULL)
 		return -1;
-
-	graph_print(gr,7,4);
-
-	graph_free(&gr, 7, 4);
+	graph_print(gr,height,width);
+	bfs(gr,height,width);
+	graph_free(&gr, height, width);
 
 	return 0;
 }
