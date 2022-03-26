@@ -192,7 +192,7 @@ void graph_free(graph_t** graf, int height, int width) {
 
 void graph_print(graph_t* graf, int height, int width) {
 	for(int i = 0; i < height*width; i++) {
-		for(int j = 0; j < graf[i].nmb_edg; j++) {
+		for(int j = 0; j < 4; j++) {
                         if( graf[i].edg[j] != NULL )
                                 printf("%i: %lf ", graf[i].edg[j]->node, graf[i].val_edg[j]);
                 }
