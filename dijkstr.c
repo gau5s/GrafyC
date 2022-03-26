@@ -6,7 +6,6 @@
 #define SIZE 32
 
 static void dijkstra_print(d_t* dij, int da, int db) {
-	int x;
 	int i = db;
 
 	printf("Najkrotsza droga z wezla %i do %i:\n", db, da);
