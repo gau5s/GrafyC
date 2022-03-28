@@ -5,15 +5,35 @@
 #include "pq.h"
 #define SIZE 32
 
-static void dijkstra_print(d_t* dij, int da, int db) {
+static int dijkstra_ile_pol(d_t* dij, int da, int db) {
 	int i = db;
+	int j = 1;
+	while(i != da) {
+		i = dij[i].p;
+		j++;
+	}
+	return j;
+}
 
-	printf("Najkrotsza droga z wezla %i do %i:\n", db, da);
-	while(dij[i].k != da) {
-		printf("%i ", dij[i].k);
+static void dijkstra_print(d_t* dij, int da, int db) {
+
+	printf("Najkrotsza droga z wezla %i do %i:\n", da, db);
+
+	int x = dijkstra_ile_pol(dij, da, db);
+	int* rev_dij = malloc(sizeof(int)*x);
+	
+	int i = db;
+	for(int j = x-1; j >= 0; j--) {
+		rev_dij[j] = dij[i].k;
 		i = dij[i].p;
 	}
-	printf("%i\n", da);
+
+
+	for(int j = 0; j < x; j++) {
+		printf("%i ", rev_dij[j]);
+	}
+
+	free(rev_dij);
 }
 
 void dijkstra(graph_t* gr, int n, int da, int db) {//n = rows*columns
@@ -29,8 +49,7 @@ void dijkstra(graph_t* gr, int n, int da, int db) {//n = rows*columns
 			add_to_pq(queue, dij[i]);
 		}
 		else
-			dij[i].odl = 987987978;//////////////////////////
-		//add_to_pq(queue, dij[i]);
+			dij[i].odl = 999999999;
 	}
 	
 	d_t tmp;

@@ -9,10 +9,10 @@
 
 int main(int argc, char **argv)
 {	
-	int height=atoi(argv[2]);
-	int width=atoi(argv[3]);
+	int height;
+	int width;
 	//graph_t* gr=graph_init(height,width,0,1);
-	graph_t* gr=graph_read(argv[1]);
+	graph_t* gr=graph_read(argv[1], &height, &width);
 	if(gr==NULL)
 		return -1;
 	
