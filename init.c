@@ -28,7 +28,7 @@ void gr_intro(graph_t* gr, int rows, int columns) {
 
 }
 
-graph_t* graph_read(char *file)
+graph_t* graph_read(char *file, int* height, int* width)
 {
 	int a,rows,columns;//ilosc wierszy to wysokosc grafu a kolumn jego szerokosc
         FILE *in = fopen (file,"r");
@@ -40,6 +40,9 @@ graph_t* graph_read(char *file)
 	{       printf("Zly format pliku\n");
                 return NULL;
         }
+	
+	*height = rows;
+	*width = columns;
 
         graph_t* gr = malloc(sizeof(graph_t) *rows*columns);
         char* str = malloc(sizeof(char) * 1000);
@@ -200,7 +203,12 @@ void graph_print(graph_t* graf, int height, int width) {
         }
 }
 
-void graph_fwrite(FILE* out ,graph_t* graf, int height, int width) {
+void graph_fwrite(char* out ,graph_t* graf, int height, int width) {
+	FILE* out = fopen(out, "w");
+	if(out == NULL) {
+		printf("Blad - plik %s", out);
+		exit(1);
+	}
 	for(int i = 0; i < height*width; i++) {
 		for(int j = 0; j < 4; j++) {
 			if(graf[i].edg[j] != NULL)
@@ -208,6 +216,6 @@ void graph_fwrite(FILE* out ,graph_t* graf, int height, int width) {
 		}
 		fprintf(out, "\n");
 	}
-
+	fclose(out);
 }
 

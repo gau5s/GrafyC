@@ -15,18 +15,14 @@ int main(int argc, char **argv)
 	graph_t* gr=graph_read(argv[1]);
 	if(gr==NULL)
 		return -1;
-
 	
-	graph_print(gr,7,4);
-
-	dijkstra(gr, 28, 0, 7);
-
-	graph_free(&gr, 7, 4);
-
 	graph_print(gr,height,width);
+	
 	bfs(gr,height,width);
-	graph_free(&gr, height, width);
 
+	dijkstra(gr, height*width, 0, 7);
+
+	graph_free(&gr, height, width);
 
 	return 0;
 }
