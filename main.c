@@ -14,7 +14,8 @@ char* help=
 	"Wczytanie grafu z pliku: -i [nazwa pliku]\n"
 	"Zapisanie grafu do pliku: -o [nazwa pliku]\n"
 	"Sprawdzenie spojnosci grafu: -s\n"
-	"Wyznaczenie najkrotszej sciezki algorytmem dijkstry: -d -e[pierwszy wezel] -f [drugi wezel]\n";
+	"Wyznaczenie najkrotszej sciezki algorytmem dijkstry: -d -e[pierwszy wezel] -f [drugi wezel]\n"
+	"Wypisanie grafu: -p\n";
 int main(int argc, char **argv)
 {	graph_t* gr=NULL;
 	char *fout=NULL;

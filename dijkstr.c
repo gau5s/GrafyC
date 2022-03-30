@@ -32,6 +32,7 @@ static void dijkstra_print(d_t* dij, int da, int db) {
 	for(int j = 0; j < x; j++) {
 		printf("%i ", rev_dij[j]);
 	}
+	printf("\n");
 
 	free(rev_dij);
 }
@@ -66,5 +67,5 @@ void dijkstra(graph_t* gr, int n, int da, int db) {//n = rows*columns
 		}
 	}
 	dijkstra_print(dij, da, db);
-	free(queue);
+	free_pq(queue);
 }

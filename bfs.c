@@ -36,7 +36,7 @@ int bfs(graph_t* gr,int height,int width)
 			}
 		}
 	}
-
+	free_pq(pq);
 
 	for(int k = 0; k < height* width; k++) 
 	{
@@ -47,5 +47,6 @@ int bfs(graph_t* gr,int height,int width)
 		}
 	}
 	printf("\nGraf spojny\n");
+	free(visited);
 	return 1;
 }
