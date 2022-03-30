@@ -65,7 +65,7 @@ graph_t* graph_read(char *file, int* height, int* width)
 		while( (x = sscanf( str, "%i :%lf%n", &a, &(gr[i].val_edg[j]), &offset )) == 2) {
 			if(a >= 0 && a < columns*rows //czy a jest wogole w przedziale, czy sie nie powtarza i edg > 0
 					&& czy_bylo(gr, i, j, a) == 0 && gr[i].val_edg[j] > 0 
-					&& gr[i].val_edg[j] < 999999999) {
+					&& gr[i].val_edg[j] < 9999999) {
 				if(a-columns == i || a+columns == i || //spr czy mozliwe polaczenia
 				  (a+1 == i && curr_col-1 < columns) || 
 				  (a-1 == i && curr_col+1 > 1)) {
