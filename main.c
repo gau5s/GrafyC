@@ -16,12 +16,12 @@ char* help=
 	"Sprawdzenie spojnosci grafu: -s\n"
 	"Wyznaczenie najkrotszej sciezki algorytmem dijkstry: -d -e[pierwszy wezel] -f [drugi wezel]\n";
 int main(int argc, char **argv)
-{	graph_t* gr;
+{	graph_t* gr=NULL;
 	char *fout=NULL;
 	char *fin=NULL;
-	int opt,height,width,sn,sflag,gflag,pflag,dflag;
-	double min,max;
-	int fn=-1;
+	int opt, height=10, width=10, sflag=0, gflag=0, pflag=0, dflag=0;
+	double min=1, max=10;
+	int fn=-1, sn=-1;
 
 	while ((opt = getopt (argc, argv, "ga:b:m:n:o:i:de:f:sp")) != -1) {
 		switch (opt) {
@@ -68,8 +68,13 @@ int main(int argc, char **argv)
 	}
 	
 	if(gflag==1)
-	{
-		if(height>0 && width>0 && min>=0 && max>0 && max>min)
+	{	
+		if(fin!=NULL) {
+			printf("Nie mozna jednoczesnie wczytac grafu i go wygenerowac!\n");
+			fprintf (stderr, help, argv[0]);
+			return -1;
+		}
+		if(height>0 && width>0 && min>0 && max>0 && max>min)
 		{
 			graph_t* gr=graph_init(height,width,min,max);
 			if(gr==NULL)
@@ -87,8 +92,8 @@ int main(int argc, char **argv)
                                 bfs(gr,height,width);
                         }
                         if(dflag==1)
-                        {	if(fn>=height*width || sn>=height*width)
-					printf("Podano wezly wykraczajace poza graf dla algorytmu dijktstry\n");
+                        {	if(fn>=height*width || sn>=height*width || fn<0 || sn<0 || fn==sn)
+					printf("Podano nieprawidlowe wezly dla algorytmu dijktstry\n");
                                	else
 					dijkstra(gr,height*width,fn,sn);
                         }
@@ -104,16 +109,11 @@ int main(int argc, char **argv)
 		
 	}		
 	else if(fin!=NULL)
-        {
-			int *rw,*rh;
+        {		
+			graph_t* gr=graph_read(fin,&height,&width);
                         if(gr==NULL)
                                 return -1;
-                        FILE *in=fopen(fin,"r");
-                        if(fscanf(in,"%d %d",&height,&width)!=2)
-                        {       printf("Na poczatku pliku powinny byc podane wymiary grafu\n");
-                                return -1;
-                        }
-			graph_t* gr=graph_read(fin,NULL,NULL);
+
                         if(pflag==1)
                         {
                                 graph_print(gr,height,width);
@@ -127,8 +127,8 @@ int main(int argc, char **argv)
 				bfs(gr,height,width);
 			}
 			if(dflag==1)
-                        {       if(fn>=height*width || sn>=height*width)
-                                        printf("Podano wezly wykraczajace poza graf");
+                        {       if(fn>=height*width || sn>=height*width || fn<0 || sn<0 || fn==sn)
+                                        printf("Podano nieprawidlowe wezly dla algorytmu dijktstry\n");
                                 else
 					dijkstra(gr,height*width,fn,sn);
 		        }

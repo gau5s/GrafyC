@@ -41,8 +41,8 @@ graph_t* graph_read(char *file, int* height, int* width)
                 return NULL;
         }
 	
-	height = &rows;
-	width = &columns;
+	*height = rows;
+	*width = columns;
 
         graph_t* gr = malloc(sizeof(graph_t) *rows*columns);
         char* str = malloc(sizeof(char) * 1000);
@@ -210,6 +210,7 @@ void graph_fwrite(char* fout ,graph_t* graf, int height, int width) {
 		printf("Blad - plik %s", fout);
 		exit(1);
 	}
+	fprintf(out, "%i %i\n", height, width);
 	for(int i = 0; i < height*width; i++) {
 		for(int j = 0; j < 4; j++) {
 			if(graf[i].edg[j] != NULL)
