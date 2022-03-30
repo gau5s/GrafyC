@@ -74,6 +74,12 @@ int main(int argc, char **argv)
 			fprintf (stderr, help, argv[0]);
 			return -1;
 		}
+		if(min>999999999 || max>999999999)
+		{	printf("Maksymalna wartosc na krawedziach grafu to 999999999\n");
+                        fprintf (stderr, help, argv[0]);
+                        return -1;
+                }
+
 		if(height>0 && width>0 && min>0 && max>0 && max>min)
 		{
 			graph_t* gr=graph_init(height,width,min,max);
